@@ -32,17 +32,30 @@ class AdminController extends Controller
             echo "false"; die();
         }
     }
-    public function bestseller($id=27){
+    public function bestseller($id=46){
         $menu_active =3;
         $product=Products_model::findOrFail($id);
         $imageGalleries=ImageGallery_model::where('products_id',$id)->get();
         return view('backEnd.products.best_seller',compact('menu_active','product','imageGalleries'));
     }
     
-    public function finishedproducts($id=32){
+    public function finishedproducts($id=47){
         $menu_active =3;
         $product=Products_model::findOrFail($id);
         $imageGalleries=ImageGallery_model::where('products_id',$id)->get();
         return view('backEnd.products.finished_products',compact('menu_active','product','imageGalleries'));
     }
+    public function updatAdminPwd(Request $request){
+        $data=$request->all();
+        $current_password=$data['pwd_current'];
+        $email_login=Auth::user()->email;
+        $check_password=User::where(['email'=>$email_login])->first();
+        if(Hash::check($current_password,$check_password->password)){
+            $password=bcrypt($data['pwd_new']);
+            User::where('email',$email_login)->update(['password'=>$password]);
+            return redirect('/admin/settings')->with('message','Password Update Successfully');
+        }else{
+            return redirect('/admin/settings')->with('message','InCorrect Current Password');
+        }
+    }    
 }

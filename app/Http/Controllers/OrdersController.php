@@ -22,6 +22,16 @@ class OrdersController extends Controller
         $shipping_address=DB::table('delivery_address')->where('users_id',Auth::id())->first();
         return view('checkout.review_order',compact('shipping_address','cart_datas','total_price'));
     }
+    public function order(Request $request){
+        $input_data=$request->all();
+        $payment_method=$input_data['payment_method'];
+        Orders_model::create($input_data);
+        if($payment_method=="COD"){
+            return redirect('/cod');
+        }else{
+            return redirect('/paypal');
+        }
+    }
     public function cod(){
         $user_order=Orders_model::where('users_id',Auth::id())->first();
         return view('payment.cod',compact('user_order'));

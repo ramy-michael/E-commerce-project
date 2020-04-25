@@ -1,7 +1,7 @@
 @extends('frontEnd.layouts.master')
 @section('title','Detial Page')
 @section('slider')
-@endsection 
+@endsection
 @section('content')
     <div class="container">
         <div class="row">
@@ -34,7 +34,7 @@
                 </ul>
             </div>
             <div class="col-sm-7">
-                <form action="" method="post" role="form">
+                <form action="{{route('addToCart')}}" method="post" role="form">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                     <input type="hidden" name="products_id" value="{{$detail_product->id}}">
                     <input type="hidden" name="product_name" value="{{$detail_product->p_name}}">

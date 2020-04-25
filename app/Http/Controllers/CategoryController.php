@@ -48,6 +48,16 @@ class CategoryController extends Controller
             echo "false"; die();
         }
     }
+    public function store(Request $request)
+    {
+        /*$this->validate($request,[
+            'name'=>'required|max:255|unique:categories,name',
+            'url'=>'required',
+        ]);*/
+        $data=$request->all();
+        Category_model::create($data);
+        return redirect()->route('category.index')->with('message','Added Success!');
+    }
    
     /**
      * Display the specified resource.
@@ -74,5 +84,39 @@ class CategoryController extends Controller
         return view('backEnd.category.edit',compact('edit_category','menu_active','cate_levels'));
     }
 
-    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $update_categories=Category_model::findOrFail($id);
+        /*$this->validate($request,[
+            'name'=>'required|max:255|unique:categories,name,'.$update_categories->id,
+            'url'=>'required',
+        ]);*/
+        //dd($request->all());die();
+        $input_data=$request->all();
+        if(empty($input_data['status'])){
+            $input_data['status']=0;
+        }
+        $update_categories->update($input_data);
+        return redirect()->route('category.index')->with('message','Updated Success!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $delete=Category_model::findOrFail($id);
+        $delete->delete();
+        return redirect()->route('category.index')->with('message','Delete Success!');
+    }
 }
